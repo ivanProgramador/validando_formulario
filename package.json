@@ -1,0 +1,23 @@
+{
+  "name": "validando_formulario",
+  "version": "1.0.0",
+  "description": "aprendendo a usar bibliotecas de validação de formularios ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git remote add origin https://github.com/ivanProgramador/validando_formulario.git"
+  },
+  "author": "Ivan Rodrigues",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "ejs": "^3.1.9",
+    "express": "^4.19.2",
+    "express-flash": "^0.0.2",
+    "express-session": "^1.18.0",
+    "nodemon": "^3.1.0"
+  }
+}
