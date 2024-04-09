@@ -18,7 +18,7 @@ app.use(session({
 app.use(flash());
 
 app.get("/",(req,res)=>{
-    console.log("Rota funcionando")
+    res.render('index');
 });
 
 app.listen(7576,(req,res)=>{
