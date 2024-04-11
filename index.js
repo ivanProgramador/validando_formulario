@@ -38,6 +38,15 @@ app.get("/",(req,res)=>{
     emailError = (emailError == undefined || emailError.length == 0) ? undefined: emailError;
     nomeError = (nomeError == undefined || nomeError.length == 0) ? undefined: nomeError;
     pontosError = (pontosError == undefined || pontosError.length == 0) ? undefined: pontosError;
+    
+    //validando as variveis para que os campos fiquem preenchidos mesmo depois de retornar 
+    //um erro de validação 
+
+    var email = req.flash('email');
+    var nome = req.flash('nome');
+    var pontos = req.flash('pontos');
+
+
 
     res.render('index',{emailError,nomeError,pontosError});
 });
