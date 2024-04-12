@@ -4,6 +4,7 @@ var session = require("express-session");
 var flash = require("express-flash");
 var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
+const { emit } = require('nodemon');
 
 
 
@@ -26,78 +27,61 @@ app.use(flash());
 
 //rota para o formulario
 app.get("/",(req,res)=>{
-    
-    var emailError  = req.flash("emailError");
-    var nomeError   = req.flash("nomeError");
+
+    var emailError = req.flash("emailError");
     var pontosError = req.flash("pontosError");
+    var nomeError = req.flash("nomeError");
 
-     //a req.flash quando usada retorna um array 
-    //então eu vou usar um oprador ternario pra dizer que se ela for vazia 
-    //não vai retonar nada porque o cliente fez o preechimento certo 
-    
-    emailError = (emailError == undefined || emailError.length == 0) ? undefined: emailError;
-    nomeError = (nomeError == undefined || nomeError.length == 0) ? undefined: nomeError;
-    pontosError = (pontosError == undefined || pontosError.length == 0) ? undefined: pontosError;
-    
-    //validando as variveis para que os campos fiquem preenchidos mesmo depois de retornar 
-    //um erro de validação 
+    emailError = (emailError == undefined || emailError.length == 0)? undefined:emailError;
 
-    var email = req.flash('email');
-    var nome = req.flash('nome');
-    var pontos = req.flash('pontos');
-
-
-
-    res.render('index',{emailError,nomeError,pontosError});
+    res.render('index',{emailError,pontosError,nomeError,email: req.flash("email"), nome: req.flash("nome"),pontos: req.flash("pontos")});
 });
-
-//rota para a validação
-
 app.post("/form",(req,res)=>{
-
+    
     var {email,nome,pontos} = req.body;
 
+    var emailError;
     var pontosError;
     var nomeError;
-    var emailError; 
 
-
-    if(email == undefined || email =="" ){
-        emailError = "email invalido"
+    if(email == undefined || email == ""){
+        emailError = "O e-mail não pode ser vazio";
     }
-    if(nome == undefined || nome ==""){
-        nomeError = "nome invalido"
+    if(pontos == undefined || pontos < 20){
+        pontosError = "Você não pode ter menos dde 20 pontos"
     }
-    if(pontos == undefined || pontos ==""){
-        pontosError = "pontos insuficientes"
+    if(nome == undefined || nome == ""){
+        nomeError = "O nome não pode ser vazio";
+    }
+    if(nome.length < 4){
+        nomeError = "O nome não pode ter menos de 3 caracteres";
+
     }
 
-    if(emailError != undefined || nomeError != undefined || pontosError != undefined){
-      /*
-        As flash sessions são sessões que so duram uma requisição normlemente elas são usadas,
-        para disparar mensagens de aviso digamos os cliente esqueceu de digitar a senha ela faz
-        a requisição pra rota percebe o erro e retorna para o formulario com a mensagem de aviso,
-        para o cliente saber que ele voltou para o formulario porque ele esqueceu de digitar a senha.
-
-        A função flash recebe 2 parametros 1 o nome dela e 2 qqual ea varivel que el vai mostrar o valor 
-        caso ela seja chamada 
-       */
-
-        req.flash("emailError", emailError);
+    if(emailError != undefined || pontosError != undefined || nomeError != undefined){
+        //aqui eu crio um req flash para cada erro de validação 
+        req.flash("emailError",emailError);
         req.flash("pontosError", pontosError);
-        req.flash("nomeError",nomeError);
+        req.flash("nomeError",nomeError); 
+        
+        req.flash("email",email);
+        req.flash("nome",nome);
+        req.flash("pontos",pontos);
 
+        res.redirect("/");
 
-
-      res.redirect("/");
     }else{
-        res.send("form completo ");
+        res.send("Form preenchido")
     }
+   
+    
+
+   
 
 
+});
 
 
-})
 
 app.listen(7576,(req,res)=>{
     console.log('aplicação rodando ....')
